@@ -1,0 +1,27 @@
+{
+    "family": "js",
+    "name": "common",
+    "version": "1",
+    "spm": {
+        "alias": {
+            "$":"jquery/jquery",
+            "ajaxform":"lib/ajaxform",
+            "AutoComplete" : "lib/autocomplete",
+            "cityselect":"lib/cityselect",
+            "datetimepicker":"lib/datetimepicker",
+            "dialog":"lib/dialog",
+            "flexslider":"lib/flexslider",
+            "livequery":"lib/livequery",
+            "placeholder":"lib/placeholder",
+            "popup":"lib/popup",
+            "scroll":"lib/scroll",
+            "selectbox":"lib/selectbox",
+            "switch":"lib/switch",
+            "template":"lib/template",
+            "validate":"lib/validate",
+            "validate_addMethod":"lib/validate_checked",
+            "cookie" : "lib/cookie"
+        },
+        "output": ["base.js"]
+    }
+}
