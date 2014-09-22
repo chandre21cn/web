@@ -3,6 +3,7 @@
 		 */
 define("lib/validate_checked",["jquery/jquery",'lib/validate'],function(require) {
     var $ = jQuery = require('jquery/jquery');
+
     var validate = require('lib/validate');
     // 自定义验证规则
     	var passowrd = /^.*[A-Za-z0-9\\w_-]+.*$/;  			//密码

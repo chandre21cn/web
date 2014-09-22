@@ -1,27 +1,26 @@
 {
-    "family": "js",
+    "family": "base",
     "name": "common",
     "version": "1",
     "spm": {
         "alias": {
-            "$":"jquery/jquery",
-            "ajaxform":"lib/ajaxform",
-            "AutoComplete" : "lib/autocomplete",
-            "cityselect":"lib/cityselect",
-            "datetimepicker":"lib/datetimepicker",
-            "dialog":"lib/dialog",
-            "flexslider":"lib/flexslider",
-            "livequery":"lib/livequery",
-            "placeholder":"lib/placeholder",
-            "popup":"lib/popup",
-            "scroll":"lib/scroll",
-            "selectbox":"lib/selectbox",
-            "switch":"lib/switch",
-            "template":"lib/template",
-            "validate":"lib/validate",
-            "validate_addMethod":"lib/validate_checked",
-            "cookie" : "lib/cookie"
+            "$":"sea-modules/jquery/jquery",
+            "ajaxform":"sea-modules/lib/ajaxform",
+            "AutoComplete" : "sea-modules/lib/autocomplete",
+            "cityselect":"sea-modules/lib/cityselect",
+            "datetimepicker":"sea-modules/lib/datetimepicker",
+            "dialog":"sea-modules/lib/dialog",
+            "flexslider":"sea-modules/lib/flexslider",
+            "livequery":"sea-modules/lib/livequery",
+            "placeholder":"sea-modules/lib/placeholder",
+            "popup":"sea-modules/lib/popup",
+            "scroll":"sea-modules/lib/scroll",
+            "selectbox":"sea-modules/lib/selectbox",
+            "switch":"sea-modules/lib/switch",
+            "template":"sea-modules/lib/template",
+            "validate":"sea-modules/lib/validate",
+            "cookie" : "sea-modules/lib/cookie"
         },
-        "output": ["base.js"]
+        "output": ["base.js","validate_methods.js"]
     }
 }
