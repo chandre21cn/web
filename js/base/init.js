@@ -15,13 +15,18 @@ seajs.config({
         "switch":"lib/switch",
         "template":"lib/template",
         "validate":"lib/validate",
-        "validate_addMethod":"lib/validate_checked",
+        "validate_methods":"lib/validate_methods",
         "cookie" : "lib/cookie"
     },
-    paths: {},
+    paths: {
+        'jquery': '/js/sea-modules/jquery',
+        'lib': '/js/sea-modules/lib',
+    },
     preload:['$'],
     'map': [ //修改版本号
         [ /^(.*\.(?:css|js))(.*)$/i, "$1?20140912" ]
     ],
     charset: 'utf-8'
 });
+
+seajs.use('base/common/1/base');
