@@ -20,7 +20,7 @@ seajs.config({
     },
     paths: {
         'jquery': '/js/sea-modules/jquery',
-        'lib': '/js/sea-modules/lib',
+        'lib': '/js/sea-modules/lib'
     },
     preload:['$'],
     'map': [ //修改版本号
@@ -29,4 +29,4 @@ seajs.config({
     charset: 'utf-8'
 });
 
-seajs.use('base/common/1/base');
+seajs.use('src/base');

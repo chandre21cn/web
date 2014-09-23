@@ -27,7 +27,7 @@
       <option name="workingDir" value="$FileDir$" />
       <envs />
     </TaskOptions>
-    <TaskOptions isEnabled="true">
+    <TaskOptions isEnabled="false">
       <option name="arguments" value="$FileDir$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" value="Compresses .js files" />
