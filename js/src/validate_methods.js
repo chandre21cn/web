@@ -19,20 +19,6 @@ define(function(require, exports, module) {
 
 
     require.async(['$','validate'], function($,validate) {
-        $.validator.setDefaults({
-            submitHandler: function () {
-            },
-            errorElement: 'label',
-            errorClass : 'err',
-            errorPlacement: function (error, element) {
-                var thatErr = element.parent();
-                thatErr.append(error)
-            },
-            success: function (label) {
-                label.addClass('success').text('OK!')
-            }
-        });
-
         //登录账号 邮箱与手机号
         $.validator.addMethod("mobile_email", function(value, element) {
             return this.optional(element) || ( (Exp.mobile.test(value)) || (Exp.email.test(value)) );
@@ -81,8 +67,40 @@ define(function(require, exports, module) {
         $.validator.addMethod("url", function(value, element) { return this.optional(element) || (Exp.url.test(value)); }, '请输入正确URL地址，如：http://www.google.com');
     });
 
-    var Placeholders = function(){};
+    var Formvalidate = function (select,options){
+        select = this.select = $(select);
 
-    module.exports = Placeholders;
+        $.extend(this, options || {});
+
+        var that = this;
+
+        console.log(options);
+
+        require('validate');
+        $.validator.setDefaults({
+            submitHandler: function () {
+            },
+            errorElement: 'label',
+            errorClass : 'err',
+            errorPlacement: function (error, element) {
+                var thatErr = element.parent();
+                thatErr.append(error)
+            },
+            success: function (label) {
+                label.addClass('success').text('OK!')
+            }
+        });
+
+    };
+
+    module.extend(Formvalidate ,Object,  {
+        'errorElement' : 'label',
+        'errorClass'   : "err",
+        'successClass' : "success"
+    });
+
+
+
+    return Formvalidate;
 
 });
