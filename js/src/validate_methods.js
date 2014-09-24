@@ -74,6 +74,10 @@ define(function(require, exports, module) {
         'wrapper' : null,               //用什么标签再把errorELement包起来
         'MsgElements'  : 'label',       //用什么标签标记错误
         'ErrorClass'   : "err",         //指定错误提示的css类名
+        'MsgPlacement' : function (error, element) {    //更改错误信息显示的位置
+            var that = element.parent();
+            that.append(error);
+        },
         'SuccessClass' : "success",     //指定正确提示的css类名
         'SuccessText' : '',             //指定正确提示的文字
         'submit': function(form){       //提交事件
@@ -104,6 +108,10 @@ define(function(require, exports, module) {
          *      wrapper      :  '用什么标签再把errorELement包起来，默认null',
          *      MsgElements  : '用什么标签标记错误，默认的是label',
          *      ErrorClass   : '指定错误提示的css类名，默认的是err',
+         *      MsgPlacement : function (error, element) {
+         *          var that = element.parent();
+         *          that.append(error);
+         *      },
          *      SuccessClass : '指定正确提示的css类名，默认的是success',
          *      SuccessText  : '指定正确提示的文字，默认为空',
          *      submit       : function(form){ 提交事件 }
@@ -131,6 +139,4 @@ define(function(require, exports, module) {
     }
 
     module.exports = Validate;
-
-
 });
