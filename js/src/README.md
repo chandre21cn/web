@@ -3,7 +3,7 @@ validate_methods 使用
 依赖 jquery validate插件
 
 添加验证规则
-==============
+---------------
 
 方法：
 new Validate.AddMethod('规则名称'，function(value, element){
@@ -12,7 +12,7 @@ new Validate.AddMethod('规则名称'，function(value, element){
 
 
 表单验证
-==============
+---------------
 
 方法：
 new Validate.checked('选择器',{
