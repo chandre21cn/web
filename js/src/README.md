@@ -4,16 +4,16 @@ validate_methods 使用
 
 ### 添加验证规则
 
-### 方法：
+方法：
 ```js
 new Validate.AddMethod('规则名称'，function(value, element){
    执行代码
 },'提示信息’);
-
+```
 
 ### 表单验证
 
-### 方法：
+方法：
 ```js
 new Validate.checked('选择器',{
    wrapper      :  '用什么标签再把errorELement包起来，默认null',
@@ -23,7 +23,7 @@ new Validate.checked('选择器',{
    SuccessText  : '指定正确提示的文字，默认为空',
    submit       : function(form){ 提交事件 }
 })
-
+```
 
 
 
