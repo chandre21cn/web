@@ -17,15 +17,27 @@
     <div class="FormBox">
         <form id="form1">
             <div class="form-item">
-                <span class="label"><span class="red">*</span>账号：</span>
+                <span class="label"><span class="red">*</span>用户名：</span>
                 <div>
-                    <input type="text" name="username" class="text"  data-rule-required="true" data-rule-mobile_email="true" data-msg-required="请输入邮箱地址或手机号" />
+                    <input type="text" name="username" class="text"  data-rule-required="true" data-rule-username="true" data-msg-required="请输入账号" />
+                </div>
+            </div>
+            <div class="form-item">
+                <span class="label"><span class="red">*</span>昵称：</span>
+                <div>
+                    <input type="text" name="name" class="text"  data-rule-required="true" data-rule-nickname="true" data-msg-required="请输入您的昵称" />
                 </div>
             </div>
             <div class="form-item">
                 <span class="label"><span class="red">*</span>密码：</span>
                 <div>
-                    <input type="password" name="password" class="text"  data-rule-required="true" data-rule-password="true" data-msg-required="请输入6-20位密码" />
+                    <input type="password" name="password" class="text" id="password"  data-rule-required="true" data-rule-pass="true" data-msg-required="请输入6-20位密码" />
+                </div>
+            </div>
+            <div class="form-item">
+                <span class="label"><span class="red">*</span>确认密码：</span>
+                <div>
+                    <input type="password" name="repassword" class="text"  data-rule-required="true" data-rule-repassword="true" data-msg-required="请再次输入密码" />
                 </div>
             </div>
             <div class="form-item">

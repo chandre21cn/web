@@ -22,26 +22,22 @@ new Validate.AddMethod(
 方法：
 ```js
 new Validate.checked('选择器',{
-   'wrapper' : null,               //用什么标签再把errorELement包起来
-   'MsgElements'  : 'label',       //用什么标签标记错误
-   'ErrorClass'   : "err",         //指定错误提示的css类名
-   'MsgPlacement' : function (error, element) {     //更改错误信息显示的位置
-       var that = element.parent();
-       that.append(error);
-   },
-   'SuccessClass' : "success",     //指定正确提示的css类名
-   'SuccessText' : '',             //指定正确提示的文字
-   'submit': function(form){       //提交事件
+    'debug': false,                 //进行调试模式（表单不提交）
+    'wrapper' : null,               //用什么标签再把errorELement包起来
+    'errorElement'  : 'label',       //用什么标签标记错误
+    'errorClass'   : "err",         //指定错误提示的css类名
+    'ignore': null,                   //对某些元素不进行验证
+    'errorPlacement' : function (error, element) {    //更改错误信息显示的位置
+       element.parent().append(error)
+    },
+    'success': function (label) {
+       label.addClass("ok").text("ok!")
+    },
+    'submitHandler': function(form){       //提交事件
        form.submit()
-   },
-   'rules' : {
-         username: "required",
-         email: {
-             required: true,    //是否必填
-             email: true        //验证规则
-         },
-   },
-   'messages': {}
+    },
+    'rules' : {},
+    'messages': {}
 })
 ```
 
@@ -64,6 +60,32 @@ new Validate.checked('选择器',{
 (15)range:[5,10]                输入值必须介于 5 和 10 之间
 (16)max:5                       输入值不能大于5
 (17)min:10                      输入值不能小于10
+```
+
+### data方法验证
+```text
+data-rule-required="true"                  是否必填
+data-msg-required="请输入6-20位密码"         必填提示信息
+data-rule-pass="true"                      pass验证规则
+data-msg-pass="请输入6-20位密码"             pass验证规则提示信息
+```
+
+### 验证规则
+```text
+mobile_email        账号                    手机或email
+username            账号                    6~12个字符，包括字母、数字、下划线，以字母开头，字母或数字结尾
+nickname            昵称                    只能输入中文、字母、数字或下划线
+pass                密码                    只能输入6-20个字母、数字、特殊字符
+repassword          确认密码
+datetime            日期时间                 如:2014-01-01 00:00:00
+date                日期                    如:2014-01-01
+phone               电话与手机号              如：010-80101011/13801010101
+mobile              手机号                   如：13801010101
+tel                 固定电话                 包括验证国内区号,国际区号,分机号如：+86-010-11111111-010
+qq                  QQ号码
+email               E-mail地址
+zipcode             邮政编码
+url                 URL地址
 ```
 
 

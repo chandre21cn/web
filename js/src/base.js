@@ -8,20 +8,12 @@ define(function (require) {
 
         //日期时间
         var a = new Validate.checked('#form1',{
-           'ErrorClass'   : "err",
-           'SuccessClass' : "success",
-           'wrapper': "div",
-           'SuccessText': "OK!",
-           'submit' : function(form){
-               console.log(form)
-               alert('1'); return false;
+           'submitHandler' : function(form){
+               alert('1');
+               return false;
            }
         });
        var b = new Validate.checked('#form2',{
-           'MsgElements' : 'span',
-           'ErrorClass'   : "err",
-           'SuccessClass' : "success",
-           'SuccessText': "你真棒！"
        });
     });
 });
