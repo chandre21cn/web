@@ -64,12 +64,14 @@ define(function(require, exports, module) {
     }, '请输入正确URL地址，如：http://www.google.com')
 
     var defaults = {
-        'wrapper' : null,
-        'MsgElements'  : 'label',
-        'ErrorClass'   : "err",
-        'SuccessClass' : "success",
-        'SuccessText' : '',
-        'submit': function(form){ form.submit() }
+        'wrapper' : null,               //用什么标签再把errorELement包起来
+        'MsgElements'  : 'label',       //用什么标签标记错误
+        'ErrorClass'   : "err",         //指定错误提示的css类名
+        'SuccessClass' : "success",     //指定正确提示的css类名
+        'SuccessText' : '',             //指定正确提示的文字
+        'submit': function(form){       //提交事件
+            form.submit()
+        }
     };
 
 
