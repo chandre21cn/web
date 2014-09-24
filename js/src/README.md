@@ -29,7 +29,9 @@ new Validate.checked('选择器',{
    'SuccessText' : '',             //指定正确提示的文字
    'submit': function(form){       //提交事件
        form.submit()
-   }
+   },
+   'rules' : {},
+   'messages': {}
 })
 ```
 
