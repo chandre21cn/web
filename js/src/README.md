@@ -6,9 +6,15 @@ validate_methods 使用
 
 方法：
 ```js
-new Validate.AddMethod('规则名称'，function(value, element){
-    return this.optional(element) || (Exp.passowrd.test(value)); // 执行代码
-},'提示信息’);
+var email = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;     //email正则
+
+new Validate.AddMethod(
+    'email',                       //规则名
+    function(value, element){
+        return this.optional(element) || (email.test(value));        // 验证代码
+    },
+   '请输入正确的E-mail地址’         //错误提示信息
+);
 ```
 
 ### 表单验证
