@@ -19,7 +19,7 @@
             <div class="form-item">
                 <span class="label"><span class="red">*</span>用户名：</span>
                 <div>
-                    <input type="text" name="username" class="text"  data-rule-required="true" data-rule-username="true" data-msg-required="请输入账号" />
+                    <input type="text" name="username" class="text"  data-rule-required="true" data-rule-maxlength="true" data-msg-required="请输入账号" />
                 </div>
             </div>
             <div class="form-item">
