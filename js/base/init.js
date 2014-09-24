@@ -15,12 +15,12 @@ seajs.config({
         "switch":"lib/switch",
         "template":"lib/template",
         "validate":"lib/validate",
-        "validate_methods":"lib/validate_methods",
+        "validate_methods":"src/validate_methods",
         "cookie" : "lib/cookie"
     },
     paths: {
         'jquery': '/js/sea-modules/jquery',
-        'lib': '/js/sea-modules/lib'
+        'lib': '/js/sea-modules/lib',
     },
     preload:['$'],
     'map': [ //修改版本号

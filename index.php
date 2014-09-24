@@ -35,6 +35,11 @@
                 </div>
             </div>
             <div class="form-item">
+                <button type="submit">提交</button>
+            </div>
+        </form>
+        <form id="form2">
+            <div class="form-item">
                 <span class="label"><span class="red">*</span>日期：</span>
                 <div>
                     <input type="text" name="date" class="text"  data-rule-required="true" data-rule-date="true" data-msg-required="请输入日期，如：2014-10-10" />
