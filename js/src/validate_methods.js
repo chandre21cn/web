@@ -21,47 +21,54 @@ define(function(require, exports, module) {
     //登录账号 邮箱与手机号
     $.validator.addMethod("mobile_email", function(value, element) {
         return this.optional(element) || ( (Exp.mobile.test(value)) || (Exp.email.test(value)) );
-    }, "账号必须为手机号或邮箱地址"),
+    }, "账号必须为手机号或邮箱地址");
     // 密码
     $.validator.addMethod("passowrd", function(value, element) {
         return this.optional(element) || (Exp.passowrd.test(value));
-    }, "只能输入6-20个字母、数字、特殊字符"),
+    }, "只能输入6-20个字母、数字、特殊字符");
+
+    // 确认密码
+    //$.validator.addMethod("confirmpassword", function(value, element) {
+    //    var val = $('#Password').val();
+    //    return this.optional(element) || (value == val);
+    //}, "两次输入的密码不一致");
+
     //日期时间
     $.validator.addMethod("datetime", function(value, element) {
         return this.optional(element) || (Exp.datetime.test(value));
-    }, "请正确填写您的日期(如:2014-01-01 00:00:00)"),
+    }, "请正确填写您的日期(如:2014-01-01 00:00:00)");
     //日期
     $.validator.addMethod("date", function(value, element) {
         return this.optional(element) || (Exp.date.test(value));
-    }, "请正确填写您的日期(如:2014-01-01)"),
+    }, "请正确填写您的日期(如:2014-01-01)");
     // 电话号码与手机
     $.validator.addMethod("phone", function(value, element) {
         return this.optional(element) || ( (Exp.tel.test(value)) || (Exp.mobile.test(value)) );
-    },"请正确填写手机、固定电话号码(如：010-80101011/13801010101)"),
+    },"请正确填写手机、固定电话号码(如：010-80101011/13801010101)");
     // 电话号码 (包括验证国内区号,国际区号,分机号如：+86-010-11111111-010)
     $.validator.addMethod("tel", function(value, element) {
         return this.optional(element) || (Exp.tel.test(value));
-    },"请正确填写固定电话号码(如：010-80101011)"),
+    },"请正确填写固定电话号码(如：010-80101011)");
     // 手机 支持最新的18、17开头号码
     $.validator.addMethod("mobile", function(value, element) {
         return this.optional(element) || (Exp.mobile.test(value));
-    },"请正确填写手机号码(如：13801010101)"),
+    },"请正确填写手机号码(如：13801010101)");
     // QQ号码
     $.validator.addMethod("qq", function(value, element) {
         return this.optional(element) || (Exp.qq.test(value));
-    },"请正确填写您的QQ号码"),
+    },"请正确填写您的QQ号码");
     //邮箱
     $.validator.addMethod("email", function(value, element) {
         return this.optional(element) || (Exp.email.test(value));
-    }, '请输入正确的E-mail地址'),
+    }, '请输入正确的E-mail地址');
     //邮编
     $.validator.addMethod("zipcode", function(value, element) {
         return this.optional(element) || (Exp.zipcode.test(value));
-    }, '请输入正确的邮编号码'),
+    }, '请输入正确的邮编号码');
     //邮编
     $.validator.addMethod("url", function(value, element) {
         return this.optional(element) || (Exp.url.test(value));
-    }, '请输入正确URL地址，如：http://www.google.com')
+    }, '请输入正确URL地址，如：http://www.google.com');
 
     var defaults = {
         'wrapper' : null,               //用什么标签再把errorELement包起来
@@ -71,7 +78,9 @@ define(function(require, exports, module) {
         'SuccessText' : '',             //指定正确提示的文字
         'submit': function(form){       //提交事件
             form.submit()
-        }
+        },
+        'rules' : null,
+        'messages': null
     };
 
 
@@ -114,7 +123,9 @@ define(function(require, exports, module) {
                 },
                 'success': function (label, element) {
                     label.addClass(options.SuccessClass).text(options.SuccessText);
-                }
+                },
+                'rules' : options.rules,
+                'messages' : options.messages
             });
         }
     }

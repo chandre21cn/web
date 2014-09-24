@@ -18,7 +18,7 @@
             "selectbox":"sea-modules/lib/selectbox",
             "switch":"sea-modules/lib/switch",
             "template":"sea-modules/lib/template",
-            "validate":"sea-modules/lib/validate",
+            "validate":"sea-modules/lib/jquery_validate",
             "cookie" : "sea-modules/lib/cookie"
         },
         "output": ["base.js","validate_methods.js"]

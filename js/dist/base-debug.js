@@ -4,12 +4,24 @@
 define("base/common/1/base-debug", [ "sea-modules/jquery/jquery-debug" ], function(require) {
     var $ = require("sea-modules/jquery/jquery-debug");
     //表单验证
-    require.async([ "validate", "./validate_methods" ], function() {
-        var validator = $("#form1").validate({
-            submitHandler: function(form) {
-                alert("submitted");
-                form.submit();
+    require.async([ "./validate_methods" ], function(Validate) {
+        //日期时间
+        var a = new Validate.checked("#form1", {
+            ErrorClass: "err",
+            SuccessClass: "success",
+            wrapper: "div",
+            SuccessText: "OK!",
+            submit: function(form) {
+                console.log(form);
+                alert("1");
+                return false;
             }
+        });
+        var b = new Validate.checked("#form2", {
+            MsgElements: "span",
+            ErrorClass: "err",
+            SuccessClass: "success",
+            SuccessText: "你真棒！"
         });
     });
 });
