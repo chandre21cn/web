@@ -5,13 +5,13 @@
 define("base/common/1/validate_methods-debug", [ "sea-modules/jquery/jquery-debug", "sea-modules/lib/jquery_validate-debug" ], function(require, exports, module) {
     var $ = require("sea-modules/jquery/jquery-debug"), validate = require("sea-modules/lib/jquery_validate-debug"), Exp = {
         email: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-        //邮件
-        zipcode: /^[1-9][0-9]{5}$/,
-        //邮编
-        url: /^((https|http|ftp|rtsp|mms)?:\/\/)?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+\/?)$/,
-        //url
-        passowrd: /^.*[A-Za-z0-9\\w_-]+.*$/,
+        //邮箱
+        password: /^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,20}$/,
         //密码
+        username: /^[a-zA-Z]\w{5,11}$/,
+        //用户名
+        nickname: /^[\w\u4e00-\u9fa5]+$/,
+        //昵称
         datetime: /^(\d{2}|\d{4})(?:\-)?([0]{1}\d{1}|[1]{1}[0-2]{1})(?:\-)?([0-2]{1}\d{1}|[3]{1}[0-1]{1})(?:\s)?([0-1]{1}\d{1}|[2]{1}[0-3]{1})(?::)?([0-5]{1}\d{1})(?::)?([0-5]{1}\d{1})$/,
         //日期支持 00-00-00 00:00:00 | 0000-00-00 00:00:00 | 09-05-22 08:16:00 | 1970-00-00 00:00:00 | 20090522081600
         tel: /^(([0\+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/,
@@ -20,21 +20,54 @@ define("base/common/1/validate_methods-debug", [ "sea-modules/jquery/jquery-debu
         //手机号
         qq: /^[1-9][0-9]{4,}$/,
         //QQ
-        date: /^(\d{4})-(\d{2})-(\d{2})$/
+        date: /^(\d{4})-(\d{2})-(\d{2})$/,
+        //日期 YYYY-MM-DD
+        zip: /^[1-9][0-9]{5}$/,
+        //邮编
+        url: /^((https|http|ftp|rtsp|mms)?:\/\/)?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+\/?)$/,
+        //url
+        idcard: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/
     };
+    $.extend($.validator.messages, {
+        required: "必选字段",
+        remote: "请修正该字段",
+        email: "请输入正确格式的电子邮件",
+        url: "请输入合法的网址",
+        date: "请输入合法的日期",
+        dateISO: "请输入合法的日期 (ISO).",
+        number: "请输入合法的数字",
+        digits: "只能输入整数",
+        creditcard: "请输入合法的信用卡号",
+        equalTo: "请再次输入相同的值",
+        accept: "请输入拥有合法后缀名的字符串",
+        maxlength: $.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+        minlength: $.validator.format("请输入一个 长度最少是 {0} 的字符串"),
+        rangelength: $.validator.format("请输入 一个长度介于 {0} 和 {1} 之间的字符串"),
+        range: $.validator.format("请输入一个介于 {0} 和 {1} 之间的值"),
+        max: $.validator.format("请输入一个最大为{0} 的值"),
+        min: $.validator.format("请输入一个最小为{0} 的值")
+    });
     //登录账号 邮箱与手机号
     $.validator.addMethod("mobile_email", function(value, element) {
         return this.optional(element) || Exp.mobile.test(value) || Exp.email.test(value);
     }, "账号必须为手机号或邮箱地址");
+    //用户名
+    $.validator.addMethod("username", function(value, element) {
+        return this.optional(element) || Exp.username.test(value);
+    }, "6~12个字符，包括字母、数字、下划线，以字母开头，字母或数字结尾");
+    //昵称
+    $.validator.addMethod("nickname", function(value, element) {
+        return this.optional(element) || Exp.nickname.test(value);
+    }, "只能输入中文、字母、数字或下划线");
     // 密码
-    $.validator.addMethod("passowrd", function(value, element) {
-        return this.optional(element) || Exp.passowrd.test(value);
+    $.validator.addMethod("pass", function(value, element) {
+        return this.optional(element) || Exp.password.test(value);
     }, "只能输入6-20个字母、数字、特殊字符");
     // 确认密码
-    //$.validator.addMethod("confirmpassword", function(value, element) {
-    //    var val = $('#Password').val();
-    //    return this.optional(element) || (value == val);
-    //}, "两次输入的密码不一致");
+    $.validator.addMethod("repassword", function(value, element) {
+        var val = $("#password").val();
+        return this.optional(element) || value == val;
+    }, "两次输入的密码不一致");
     //日期时间
     $.validator.addMethod("datetime", function(value, element) {
         return this.optional(element) || Exp.datetime.test(value);
@@ -64,30 +97,41 @@ define("base/common/1/validate_methods-debug", [ "sea-modules/jquery/jquery-debu
         return this.optional(element) || Exp.email.test(value);
     }, "请输入正确的E-mail地址");
     //邮编
-    $.validator.addMethod("zipcode", function(value, element) {
-        return this.optional(element) || Exp.zipcode.test(value);
+    $.validator.addMethod("zip", function(value, element) {
+        return this.optional(element) || Exp.zip.test(value);
     }, "请输入正确的邮编号码");
-    //邮编
+    //URL
     $.validator.addMethod("url", function(value, element) {
         return this.optional(element) || Exp.url.test(value);
     }, "请输入正确URL地址，如：http://www.google.com");
+    // 身份证号
+    $.validator.addMethod("idcard", function(value, element) {
+        return this.optional(element) || idcard.test(value);
+    }, "请输入正确的15、18位身份证号码");
     var defaults = {
+        debug: false,
+        //进行调试模式（表单不提交）
         wrapper: null,
         //用什么标签再把errorELement包起来
-        MsgElements: "label",
+        errorElement: "label",
         //用什么标签标记错误
-        ErrorClass: "err",
+        errorClass: "err",
         //指定错误提示的css类名
-        SuccessClass: "success",
-        //指定正确提示的css类名
-        SuccessText: "",
-        //指定正确提示的文字
-        submit: function(form) {
+        ignore: null,
+        //对某些元素不进行验证
+        errorPlacement: function(error, element) {
+            //更改错误信息显示的位置
+            element.parent().append(error);
+        },
+        success: function(label) {
+            label.addClass("ok").text("ok!");
+        },
+        submitHandler: function(form) {
             //提交事件
             form.submit();
         },
-        rules: null,
-        messages: null
+        rules: {},
+        messages: {}
     };
     var Validate = {
         /**
@@ -102,34 +146,11 @@ define("base/common/1/validate_methods-debug", [ "sea-modules/jquery/jquery-debu
         },
         /**
          *   表单验证
-         *   方法
-         *   new Validate.checked('选择器',{
-         *      wrapper      :  '用什么标签再把errorELement包起来，默认null',
-         *      MsgElements  : '用什么标签标记错误，默认的是label',
-         *      ErrorClass   : '指定错误提示的css类名，默认的是err',
-         *      SuccessClass : '指定正确提示的css类名，默认的是success',
-         *      SuccessText  : '指定正确提示的文字，默认为空',
-         *      submit       : function(form){ 提交事件 }
-         *   })
          */
         checked: function(select, options) {
             select = this.select = $(select);
             options = $.extend({}, defaults, options);
-            select.validate({
-                submitHandler: options.submit,
-                errorElement: options.MsgElements,
-                errorClass: options.ErrorClass,
-                wrapper: options.wrapper,
-                errorPlacement: function(error, element) {
-                    var that = element.parent();
-                    that.append(error);
-                },
-                success: function(label, element) {
-                    label.addClass(options.SuccessClass).text(options.SuccessText);
-                },
-                rules: options.rules,
-                messages: options.messages
-            });
+            select.validate(options);
         }
     };
     module.exports = Validate;

@@ -16,10 +16,9 @@ define(function(require, exports, module) {
             mobile : /^0?(13|15|18|17|14)[0-9]{9}$/,									//手机号
             qq : /^[1-9][0-9]{4,}$/,												//QQ
             date :  /^(\d{4})-(\d{2})-(\d{2})$/,   //日期 YYYY-MM-DD
-            zipcode:  /^[1-9][0-9]{5}$/,         //邮编
-            url : /^((https|http|ftp|rtsp|mms)?:\/\/)?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+\/?)$/       //url
-
-
+            zip:  /^[1-9][0-9]{5}$/,         //邮编
+            url : /^((https|http|ftp|rtsp|mms)?:\/\/)?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+\/?)$/,       //url
+            idcard : /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/   //18位身份证
         };
 
     $.extend($.validator.messages, {
@@ -96,13 +95,17 @@ define(function(require, exports, module) {
         return this.optional(element) || (Exp.email.test(value));
     }, '请输入正确的E-mail地址');
     //邮编
-    $.validator.addMethod("zipcode", function(value, element) {
-        return this.optional(element) || (Exp.zipcode.test(value));
+    $.validator.addMethod("zip", function(value, element) {
+        return this.optional(element) || (Exp.zip.test(value));
     }, '请输入正确的邮编号码');
     //URL
     $.validator.addMethod("url", function(value, element) {
         return this.optional(element) || (Exp.url.test(value));
     }, '请输入正确URL地址，如：http://www.google.com');
+    // 身份证号
+    $.validator.addMethod("idcard",function(value, element) {
+        return this.optional(element) || (idcard.test(value))
+    },'请输入正确的15、18位身份证号码');
 
     var defaults = {
         'debug': false,                 //进行调试模式（表单不提交）

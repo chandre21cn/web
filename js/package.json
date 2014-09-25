@@ -21,6 +21,6 @@
             "validate":"sea-modules/lib/jquery_validate",
             "cookie" : "sea-modules/lib/cookie"
         },
-        "output": ["base.js","validate_methods.js"]
+        "output": ["theme.js","validate_methods.js"]
     }
 }
