@@ -26,7 +26,13 @@ define("base/common/1/validate_methods-debug", [ "sea-modules/jquery/jquery-debu
         //邮编
         url: /^((https|http|ftp|rtsp|mms)?:\/\/)?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+\/?)$/,
         //url
-        idcard: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/
+        idcard: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+        //18位身份证
+        color: /^#[a-fA-F0-9]{6}$/,
+        //color
+        image: /^.*[^a][^b][^c]\.(?:png|jpg|bmp|gif|jpeg)$/,
+        //图片
+        file: /^.*[^a][^b][^c]\.(?:doc|docx|pdf|pptx|ppt|xls|xlsx|zip|rar)$/
     };
     $.extend($.validator.messages, {
         required: "必选字段",
@@ -76,6 +82,16 @@ define("base/common/1/validate_methods-debug", [ "sea-modules/jquery/jquery-debu
     $.validator.addMethod("date", function(value, element) {
         return this.optional(element) || Exp.date.test(value);
     }, "请正确填写您的日期(如:2014-01-01)");
+    // 日期时间对比验证
+    $.validator.addMethod("dateContrast", function(value, element, param) {
+        var startDate = $("#starttime").val();
+        return new Date(Date.parse(startDate.replace(/-/g, "/"))) <= new Date(Date.parse(value.replace(/-/g, "/")));
+    }, "结束日期必须大于开始日期");
+    //日期对比
+    $.validator.addMethod("datefromto", function(value, element, param) {
+        var startDate = $("#fromdate").val();
+        return new Date(Date.parse(value.replace(/-/g, "/"))) > new Date(Date.parse(startDate.replace(/-/g, "/")));
+    }, "结束日期必须大于或等于开始日期");
     // 电话号码与手机
     $.validator.addMethod("phone", function(value, element) {
         return this.optional(element) || Exp.tel.test(value) || Exp.mobile.test(value);
@@ -108,6 +124,18 @@ define("base/common/1/validate_methods-debug", [ "sea-modules/jquery/jquery-debu
     $.validator.addMethod("idcard", function(value, element) {
         return this.optional(element) || idcard.test(value);
     }, "请输入正确的15、18位身份证号码");
+    //颜色验证
+    $.validator.addMethod("color", function(value, element, param) {
+        return this.optional(element) || Exp.color.test(value);
+    }, "颜色值填写错误");
+    //图片文件
+    $.validator.addMethod("image", function(value, element, param) {
+        return this.optional(element) || Exp.image.test(value);
+    }, "请上传png，jpg，bmp，gif，jpeg格式图片");
+    //附件
+    $.validator.addMethod("file", function(value, element, param) {
+        return this.optional(element) || Exp.file.test(value);
+    }, "请上传doc,ppt,xls,pdf,zip,rar格式文件");
     var defaults = {
         debug: false,
         //进行调试模式（表单不提交）
