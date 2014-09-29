@@ -322,7 +322,7 @@ define(function(require, exports, module) {
                     'fileSizeLimit': options.fileSizeLimit,
                     'multi': options.multi,
                     'uploadLimit': options.uploadLimit,
-                    'swf': '/source/meet_app/js/lib/upload/uploadify.swf',
+                    'swf': '/source/meet_app/js/sea-modules/lib/upload/uploadify.swf',
                     'folder': URL.Pics_Path,
                     'uploader': URL.UpPics,
                     'width': 120,

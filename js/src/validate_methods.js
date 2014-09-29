@@ -80,9 +80,9 @@ define(function(require, exports, module) {
 
     // 日期时间对比验证
     $.validator.addMethod("dateContrast", function(value, element, param) {
-        var startDate = $('#starttime').val();
-        return new Date(Date.parse(startDate.replace(/-/g,"/"))) <= new Date(Date.parse(value.replace(/-/g,"/")));
-    },"结束日期必须大于开始日期");
+        var start = $('#starttime').val();
+        return !(new Date(Date.parse(start.replace(/-/g,"/"))) >= new Date(Date.parse(value.replace(/-/g,"/"))));
+    },"结束日期必须比开始日期晚");
 
     //日期对比
     $.validator.addMethod("datefromto", function(value, element, param) {

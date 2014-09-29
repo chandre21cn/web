@@ -27,6 +27,6 @@
             "editor": "sea-modules/editor/redactor",
             "history": "sea-modules/lib/history"
         },
-        "output": ["manage.js","validate_methods.js","common.js"]
+        "output": ["manage.js","validate_methods.js","common.js","theme.js","meeting.js"]
     }
 }

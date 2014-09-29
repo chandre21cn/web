@@ -91,11 +91,55 @@ define(function(require, exports, module) {
                     content: '<div style="text-align:center">'+ opt.msg +'</div>'
                 }).showModal()
 
-                if (close) {
+                if (opt.close) {
                     setTimeout(function () {__alertMsg.remove();}, 2000);
                 }
             });
         }
+
+
+        //会议提交审核
+        $(document).on('click','#SubmitMeet',function(){
+            var url = URL.path +'/baseinfo/change_power';
+            var submitmeet = function(){
+                $.ajax({
+                    'url': url,
+                    'type': 'POST',
+                    'dataType': 'json',
+                    'data': {'meetid': mid,'index':3},
+                    'beforeSend': function() {
+                        return __alertTips({'msg' : '会议提交中......'})
+                    },
+                    'error' : function(){
+                        return __alertTips({'msg' : '操作出错啦！'})
+                    },
+                    'success': function(json) {
+                        var n = Number(json.code);
+                        switch(n){
+                            case 1:
+                                return __alertTips({'msg' : '提交成功，请待审核！'});
+                                break;
+                            default:
+                                return __alertTips({'msg' : json.msg})
+                        };
+                    }
+                })
+            }
+            require.async(['dialog'],function(dialog){
+                dialogTip = dialog({
+                    title: '提示',
+                    content: '活动的基本信息都填写完整？<br />注意：您填写的基本信息完整性有促于我们对您的会议进行审核。',
+                    okValue: '确定',
+                    width: 450,
+                    ok: function () {
+                        submitmeet();
+                    },
+                    cancelValue: '取消',
+                    cancel: function () {}
+                }).showModal();
+            });
+            return false;
+        })
 
         /*
          *	图片上传
@@ -227,54 +271,46 @@ define(function(require, exports, module) {
         /*
          *	日历
          */
-        $(document).on('focus click','[data-provide=datetimepicker]',function(){
-            $(this).datetimepicker({
-                format: "yyyy-mm-dd hh:ii:00",
-                language: 'zh-CN',
-                autoclose : true,
+        $('[data-provide=datetimepicker]').livequery(function(){
+            $('[data-provide=datetimepicker]').datetimepicker({
+                lang:'ch',
+                format:'Y-m-d H:i:00',
+                step:5
             });
-        })
+        });
 
-        $(document).on('focus click','[data-provide=yearTotime]',function(){
+        $('[data-provide=yearTotime]').livequery(function(){
             $(this).datetimepicker({
-                format: "yyyy-mm-dd hh:ii:00",
-                language: 'zh-CN',
-                autoclose : true,
-                startView: 4
+                lang:'ch',
+                format:'Y-m-d H:i:00',
+                step:5
             });
-        })
+        });
         // 年月日选择
-        $(document).on('focus click','[data-provide=year]',function(){
+        $('[data-provide=year]').livequery(function(){
             $(this).datetimepicker({
-                format: "yyyy-mm-dd",
-                language: 'zh-CN',
-                showMeridian: 'day',
-                startView: 4,
-                minView: 2,
-                autoclose : true
+                lang:'ch',
+                format:'Y-m-d',
+                timepicker:false
             });
-        })
+        });
         // 日期选择
-        $(document).on('focus click','[data-provide=date]',function(){
+        $('[data-provide=date]').livequery(function(){
             $(this).datetimepicker({
-                format: "mm月dd日",
-                language: 'zh-CN',
-                showMeridian: 'day',
-                startView: 3,
-                minView: 2,
-                autoclose : true
+                lang:'ch',
+                format:'m月d日',
+                timepicker:false
             });
-        })
+        });
         //时间选择
-        $(document).on('focus click','[data-provide=time]',function(){
+        $('[data-provide=time]').livequery(function(){
             $(this).datetimepicker({
-                format: "hh:ii",
-                language: 'zh-CN',
-                startView: 1,
-                minView: 0,
-                autoclose : true
+                lang:'ch',
+                datepicker:false,
+                format:'H:i',
+                step:5
             });
-        })
+        });
 
         // Tabs选项
         $('[data-tabs="true"]').livequery(function(){
