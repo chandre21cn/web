@@ -51,9 +51,7 @@ define(function(require, exports, module) {
             var $this = $(this);
             var $that = $this.parent();
             $that.siblings().find('.list').slideUp('fast',function(){
-                $that.siblings().find('.title i').html('&#xe615;');
                 $that.find('.list').slideDown('fast');
-                $that.find('.title i').html('&#xe618;');
             });
 
         })
@@ -76,28 +74,6 @@ define(function(require, exports, module) {
          *   信息提示
          */
 
-        var __alertTips = function(options) {
-
-            var defaults = {
-                'msg' 		:  "操作成功！",
-                'close'     : true
-            };
-            opt = $.extend(true, {}, defaults, options);
-
-            require.async(['dialog'],function(dialog){
-                var __alertMsg = dialog({		//弹出消息提示
-                    width: 200,
-                    cancel: false,
-                    content: '<div style="text-align:center">'+ opt.msg +'</div>'
-                }).showModal()
-
-                if (opt.close) {
-                    setTimeout(function () {__alertMsg.remove();}, 2000);
-                }
-            });
-        }
-
-
         //会议提交审核
         $(document).on('click','#SubmitMeet',function(){
             var url = URL.path +'/baseinfo/change_power';
@@ -108,19 +84,19 @@ define(function(require, exports, module) {
                     'dataType': 'json',
                     'data': {'meetid': mid,'index':3},
                     'beforeSend': function() {
-                        return __alertTips({'msg' : '会议提交中......'})
+                        return Common.alertTips({'msg' : '会议提交中......'})
                     },
                     'error' : function(){
-                        return __alertTips({'msg' : '操作出错啦！'})
+                        return Common.alertTips({'msg' : '操作出错啦！'})
                     },
                     'success': function(json) {
                         var n = Number(json.code);
                         switch(n){
                             case 1:
-                                return __alertTips({'msg' : '提交成功，请待审核！'});
+                                return Common.alertTips({'msg' : '提交成功，请待审核！'});
                                 break;
                             default:
-                                return __alertTips({'msg' : json.msg})
+                                return Common.alertTips({'msg' : json.msg})
                         };
                     }
                 })
@@ -144,18 +120,33 @@ define(function(require, exports, module) {
         /*
          *	图片上传
          */
-        $(document).on('click','[data-uploads="pics"]',function(){
+        $(document).on('click','[data-uploads="banner"]',function(){
             var that = $(this);
             Common.__UpFiles({
                 trigger 	: 	that,
                 title		: 	"上传图片",
                 types 		:   "image",
-                fileTypeExts 	: 	'*.jpg;*.gif;*.png;*.bmp;*.jpge',
-                fileSizeLimit	: 	'2MB',
+                fileTypeExts 	: 	'*.jpg;*.gif;*.png;*.jpge',
+                fileSizeLimit	: 	'1MB',
                 multi		:   false,
                 uploadLimit :   1
             })
-        })
+        });
+
+        /*
+        * 图片切图
+        * */
+        $(document).on('click','[data-uploads="pics"]',function(){
+            var $this = $(this);
+            var size = $this.data('type');
+            Common.CropPhoto({
+                size: UpPics_size[size],
+                fileSize: "1024KB",
+                success: function(url){
+                    $this.parent().find('input').val(url);
+                }
+            })
+        });
 
         /*
          * 文件上传
@@ -183,35 +174,35 @@ define(function(require, exports, module) {
                 'dataType': 'json',
                 'timeout':   3000,
                 'error' : function(){
-                    return __alertTips({'msg' : '信息提交时出错！'})
+                    return Common.alertTips({'msg' : '信息提交时出错！'})
                 },
                 'success': function(json) {
                     var n = Number(json.code);
                     switch(n){
                         case 1: 			//无刷新
-                            return __alertTips({'msg' : json.msg})
+                            return Common.alertTips({'msg' : json.msg})
                             break;
                         case 2: 			//后退
                             history.go(-1);
-                            return __alertTips({'msg' : json.msg})
+                            return Common.alertTips({'msg' : json.msg})
                             break;
                         case 3: 			//刷新当前页
-                            __alertTips({'msg' : json.msg})
+                            Common.alertTips({'msg' : json.msg})
                             setTimeout(function () {location.reload();}, 2000);
                             break;
                         case 4: 			//成功后不刷新 且添空表单
                             $('.redactor_editor').html(''); 	//编辑器数据重置
                             //validator.resetForm();		//重置表单
-                            return __alertTips({'msg' : json.msg})
+                            return Common.alertTips({'msg' : json.msg})
                             break;
                         default:
-                            return __alertTips({'msg' : json.msg})
+                            return Common.alertTips({'msg' : json.msg})
                     }
                 }
             }).submit(function() {return false;});
-        }
+        };
 
-        $(document).on('click',"[data-validata='true'] [type=submit]",function(){
+        $(document).on('click',"[data-validata='true'] [type=submit]",function(e){
             var thatform = $(this).parent().parent();
             new Validate.checked(thatform,{
                 'errorElement'  : 'div',
@@ -226,7 +217,6 @@ define(function(require, exports, module) {
                     __formSubmit(form)
                 }
             });
-
         });
 
 
@@ -262,9 +252,15 @@ define(function(require, exports, module) {
 
         // 添加导航选择
         $('#SelectNav').livequery(function(){
-            selectbox($(this),{
+            var that = $(this);
+            selectbox(that,{
                 getData: function(data) {
-                    $("#NavName").val(data.text);
+                    if (that.val() == '7' ) {
+                        $('#OutUrl').show();
+                    } else {
+                        $("#NavName").val(data.text);
+                        $('#OutUrl').hide();
+                    }
                 }
             });
         })
@@ -419,23 +415,24 @@ define(function(require, exports, module) {
 
         //删除
         $(document).on('click','.info_del',function(){
-            var id = $(this).data('id');
-            var type = $(this).data('type');
-            var url = URL.path +'/'+ type +'/'+ 'del';
-            var ListID = '#'+ type + "_list_" + id;
+            var id = $(this).data('id'),
+                type = $(this).data('type'),
+                types = $(this).data('types'),
+                url = URL.path +'/'+ type +'/'+ 'del',
+                ListID = '#'+ type + "_list_" + id;
             // 提交删除
-
+            if (types==undefined || types == '') { types = ''}
             var info_del = function(opt){
                 $.ajax({
                     'url': opt.url,
                     'type': 'POST',
                     'dataType': 'json',
-                    'data': {'meetid': mid,'id':opt.id},
+                    'data': {'meetid': mid,'id':opt.id,'type':types},
                     'beforeSend': function() {
-                        return __alertTips({'msg' : '信息删除中......'})
+                        return Common.alertTips({'msg' : '信息删除中......'})
                     },
                     'error' : function(){
-                        return __alertTips({'msg' : '信息删除时出错！'})
+                        return Common.alertTips({'msg' : '信息删除时出错！'})
                     },
                     'success': function(json) {
                         var n = Number(json.code);
@@ -443,14 +440,14 @@ define(function(require, exports, module) {
                             case 1:
                                 Common.__CloseDialog();		//关闭右侧弹出层
                                 $(ListID).remove();			//删除列表中的数据
-                                return __alertTips({'msg' : json.msg})
+                                return Common.alertTips({'msg' : json.msg})
                                 break;
                             case 2:
                                 $(ListID).remove();			//删除列表中的数据
-                                return __alertTips({'msg' : json.msg})
+                                return Common.alertTips({'msg' : json.msg})
                                 break;
                             default:
-                                return __alertTips({'msg' : json.msg})
+                                return Common.alertTips({'msg' : json.msg})
                         }
                     }
                 })
@@ -480,30 +477,32 @@ define(function(require, exports, module) {
             e.stopPropagation();
         })
         $(document).on("change",'.weight',function(){
-            var index = $(this).val();
-            var type = $(this).data('type');
-            var id = $(this).data('id');
+            var index = $(this).val(),
+                type = $(this).data('type'),
+                types = $(this).data('types'),
+                id = $(this).data('id');
             var url = URL.path + '/' + type + '/' +'change_sort';
+            if (types==undefined || types == '') { types = ''}
             $.ajax({
                 'url': url,
                 'type': 'POST',
                 'dataType': 'json',
-                'data': {'meetid': mid,'id':id,'index': index},
+                'data': {'meetid': mid,'id':id,'index': index,'type': types},
                 'error' : function(){
-                    return __alertTips({'msg' : '出错啦！'})
+                    return Common.alertTips({'msg' : '出错啦！'})
                 },
                 'success': function(json) {
                     var n = Number(json.code);
                     switch(n){
                         case 1:
-                            return __alertTips({'msg' : json.msg})
+                            return Common.alertTips({'msg' : json.msg})
                             break;
                         default:
-                            return __alertTips({'msg' : json.msg})
+                            return Common.alertTips({'msg' : json.msg})
                     }
                 }
             })
-        })
+        });
 
         // 嘉宾选择
         $(document).on('click','.selectUser li',function(){
@@ -585,6 +584,7 @@ define(function(require, exports, module) {
         $(document).on('click',".SelectTpl li",function(){
             var that = $(this),
                 tplid=that.data('tplid');
+            //UpPics_size = Size_images.tpl_ + tplid;         //设置模板图片大小
             that.find('span').show();
             that.siblings().find('span').hide();
             $('#Tpl_Val').val(tplid);
@@ -598,7 +598,7 @@ define(function(require, exports, module) {
                 var v = that.serialize();
                 window.open(URL.path + '/theme/preview?'+ v ,'_blank')
             } else {
-                return __alertTips({'msg' : '您的设置有误，请检查！'})
+                return Common.alertTips({'msg' : '您的设置有误，请检查！'})
             }
         })
 
@@ -678,17 +678,17 @@ define(function(require, exports, module) {
                         'dataType': 'json',
                         'data': {'meetid': meetid,'id':id,'status': val},
                         'error' : function(){
-                            return __alertTips({'msg' : '出错啦！'})
+                            return Common.alertTips({'msg' : '出错啦！'})
                         },
                         'success': function(json) {
                             var n = Number(json.code);
                             switch(n){
                                 case 1:
-                                    __alertTips({'msg' : json.msg})
+                                    Common.alertTips({'msg' : json.msg})
                                     setTimeout(function () {location.reload();}, 2000);
                                     break;
                                 default:
-                                    return __alertTips({'msg' : json.msg})
+                                    return Common.alertTips({'msg' : json.msg})
                             }
                         }
                     })

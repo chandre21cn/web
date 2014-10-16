@@ -25,8 +25,9 @@
             "upload": "sea-modules/lib/upload/uploadify",
             "editor8_2": "sea-modules/editor/8.2/redactor",
             "editor": "sea-modules/editor/redactor",
+            "jcrop": "sea-modules/lib/jcrop",
             "history": "sea-modules/lib/history"
         },
-        "output": ["manage.js","validate_methods.js","common.js","theme.js","meeting.js"]
+        "output": ["manage.js","theme.js","meeting.js"]
     }
 }

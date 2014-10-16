@@ -66,9 +66,7 @@ define(function(require, exports, module) {
         }
         return string
     });
-
     //数组转字符串 用表报名人员列表
-
 
     //URL 辅助方法
     template.helper('isURL', function(str) {
@@ -81,6 +79,26 @@ define(function(require, exports, module) {
     });
 
     var Common = {
+        /*
+         * 提示信息
+         */
+        'alertTips' : function(options) {
+            var defaults = {
+                'msg'       :  "操作成功！",
+                'close'     : true
+            };
+            opts = $.extend(true, {}, defaults, options);
+            require.async(['dialog'],function(dialog){
+                var alertMsg = dialog({       //弹出消息提示
+                    width: 200,
+                    cancel: false,
+                    content: '<div style=\"text-align:center;font-size:14px;\">'+ opts.msg +'</div>'
+                }).showModal();
+                if (opts.close==true) {
+                    setTimeout(function () {alertMsg.remove()},2000);
+                }
+            });
+        },
         /*取得去除页头的浏览器高度*/
         __GetWindowsHeight: function() {
             var window_height = Number($(window).height());
@@ -165,10 +183,7 @@ define(function(require, exports, module) {
                     $('#NavMenu a[href^="#t=' + opt.type + '"]').addClass('on');
                     // 展开当前页菜单
                     var $that = $('#NavMenu a[href^="#t=' + opt.type + '"]').parent().parent();
-                    $that.siblings().find('.title i').html('');
                     $that.find('.list').slideDown('fast');
-                    $that.find('.title i').html('');
-
                     $('#ContMenu .tabs_menu a').each(function() {
                         var that = $(this);
                         that[that.attr('href') == opt.oldhash ? 'addClass' : 'removeClass']('on');
@@ -272,7 +287,7 @@ define(function(require, exports, module) {
                 trigger: '',
                 title: "上传图片",
                 types: "image",
-                fileTypeExts: '*.jpg;*.gif;*.png;*.bmp', //文件类型
+                fileTypeExts: '*.jpg;*.gif;*.png', //文件类型
                 fileSizeLimit: '2MB', //文件大小
                 multi: false, //多文件上传
                 uploadLimit: 5 //同时上传多少文件
@@ -322,7 +337,7 @@ define(function(require, exports, module) {
                     'fileSizeLimit': options.fileSizeLimit,
                     'multi': options.multi,
                     'uploadLimit': options.uploadLimit,
-                    'swf': '/source/meet_app/js/sea-modules/lib/upload/uploadify.swf',
+                    'swf': URL.uploadifySwf,
                     'folder': URL.Pics_Path,
                     'uploader': URL.UpPics,
                     'width': 120,
@@ -351,6 +366,128 @@ define(function(require, exports, module) {
                     'onSelectError': function(file, errorCode, errorMsg) {}
                 });
             });
+        },
+        /*
+         * 图片上传与裁图
+         */
+        "CropPhoto" : function (options){
+            var defualts = {
+                title: "上传图片",
+                size: [160,160],
+                fileSize : "1024KB",
+                fileType : '*.gif; *.jpg; *.jpeg; *.png;',
+                success : function(url){}
+            };
+            var opts = $.extend({}, defualts, options);
+            require.async(['template','dialog','upload','jcrop','ajaxform'],function(template,dialog,uploadify,Jcrop,ajaxform) {
+                data = {
+                    title : opts.title,
+                    width:opts.size[0],
+                    height:opts.size[1],
+                    fileSize: opts.fileSize,
+                    fileType : opts.fileType
+                }
+                var html = template('PicsCrop', data);
+                var _UploadPics = dialog({
+                    title: '上传图像',
+                    content: html,
+                    width: 'auto'
+                }).showModal();
+
+                var jcrop_api, boundx, boundy;
+
+                function updateCoords(c){
+                    $('#crop-x').val(c.x);
+                    $('#crop-y').val(c.y);
+                    $('#crop-w').val(c.w);
+                    $('#crop-h').val(c.h);
+                };
+                function checkCoords(){
+                    if (parseInt($('#crop-w').val())) return true;
+                    alert('请选择图片上合适的区域');
+                    return false;
+                };
+                function updatePreview(c){
+                    if (parseInt(c.w) > 0){
+                        var rx = opts.size[0] / c.w;
+                        var ry = opts.size[1] / c.h;
+                        $('#crop-preview').css({
+                            width: Math.round(rx * boundx) + 'px',
+                            height: Math.round(ry * boundy) + 'px',
+                            marginLeft: '-' + Math.round(rx * c.x) + 'px',
+                            marginTop: '-' + Math.round(ry * c.y) + 'px'
+                        });
+                    }
+                };
+
+                //上传
+                $("#Pics-Upload").uploadify({
+                    'auto'				: true,
+                    'multi'				: false,
+                    'uploadLimit'		: 1,
+                    'fileObjName'       : 'file',
+                    'buttonImage'		: URL.Btn_picsupload,
+                    'height'			: 35,
+                    'width'				: 140,
+                    'removeCompleted'	: true,
+                    'swf'				: URL.uploadifySwf,
+                    'uploader'			: URL.PicsUpload,
+                    'fileTypeExts'		: opts.fileType,
+                    'fileSizeLimit'		: opts.fileSize,
+                    'onUploadSuccess' : function(file, data, response) {
+                        var msg = $.parseJSON(data);
+                        //裁图
+                        if( msg.code == 1 ){
+                            $("#crop-pics").val( msg.filelink );
+                            $("#codesrc").val( msg.codesrc );
+                            $("#crop-target").attr("src",msg.filelink);
+                            $("#crop-preview").attr("src",msg.filelink).css('visibility',"visible");
+                            $('#crop-target').Jcrop({
+                                    //minSize: [opts.size[0],opts.size[1]],
+                                    setSelect: [0,0,opts.size[0],opts.size[1]],
+                                    'trackDocument' : true,
+                                    onChange: updatePreview,
+                                    onSelect: updatePreview,
+                                    onSelect: updateCoords,
+                                    boxWidth : 380,
+                                    boxHeight: 316,
+                                    //aspectRatio: opts.size[0] / opts.size[1]
+                                },
+                                function(){
+                                    // Use the API to get the real image size
+                                    var bounds = this.getBounds();
+                                    boundx = bounds[0];
+                                    boundy = bounds[1];
+                                    // Store the API in the jcrop_api variable
+                                    jcrop_api = this;
+                                });
+                        } else {
+                            alert('上传失败');
+                        }
+                    }
+                });
+
+                //提交
+                $("#CropForm").ajaxForm({
+                    'dataType': 'json',
+                    'beforeSubmit': function(){
+                        Common.alertTips({'msg':'图像保存中，请稍后！'})
+                    },
+                    'error' : function(){
+                        Common.alertTips({'msg':'操作失败，请稍后再试！'})
+                    },
+                    'success': function(json){
+                        if (json.status == 1){
+                            opts.success(json.picsurl); //回传上传的图片地址
+                            _UploadPics.remove();   //关闭图片上传窗口
+                            Common.alertTips({'msg': json.message })
+                        } else {
+                            Common.alertTips({'msg': json.message })
+                        }
+                    }
+                }).submit(function(){return false})
+            });
+
         },
         // 分页
         __GetPages: function(options) {
