@@ -11,6 +11,8 @@ define(function(require, exports, module) {
     require('livequery');
     require('history');
     require('cityselect');
+    require('drag');
+
     /*
      *	取得URL地址后的参数
      */
@@ -320,7 +322,6 @@ define(function(require, exports, module) {
                 });
             });
         });
-
 
         /*
          *	编辑器
@@ -695,6 +696,76 @@ define(function(require, exports, module) {
                 }
             });
         })
+
+        //模板创建
+
+        $("#theme-mod-list").livequery(function(){
+            $("li",this).jsmartdrag({
+                target:'.ThemeMod',
+                afterDrag:afterDrag
+            });
+
+            $("#theme-mod1").dragsort({
+                dragSelector: "div",
+                dragBetween: true,
+                dragEnd: saveOrder1,
+                placeHolderTemplate: "<li class='placeHolder'><div></div></li>"
+            });
+
+            $("#theme-mod2").dragsort({
+                dragSelector: "div",
+                dragBetween: true,
+                dragEnd: saveOrder2,
+                placeHolderTemplate: "<li class='placeHolder'><div></div></li>"
+            });
+        });
+
+        function afterDrag(selected,currentObj,targetSelected){
+            if(selected){
+                var mod = currentObj.attr('data-modname');
+                if (targetSelected.children('[data-modname="'+ mod +'"]').size() > 0 ) {
+                    return false;
+                }
+                var clones = currentObj.clone().removeClass('jsmartdrag-source-hover');
+                targetSelected.append(clones);
+
+                var data = targetSelected.find("li").map(function() {
+                    return $(this).data('modname');
+                }).get();
+                var v = targetSelected.data('input');
+                $("input[name='" + v +"']").val(data.join(","))
+            }
+        }
+        function saveOrder1() {
+            var data = $("#theme-mod1 li").map(function() {
+                return $(this).data('modname');
+            }).get();
+            $("input[name=col1]").val(data.join(","))
+        }
+        function saveOrder2() {
+            var data = $("#theme-mod2 li").map(function() {
+                return $(this).data('modname');
+            }).get();
+            $("input[name=col2]").val(data.join(","))
+        }
+
+        $(document).on('click','.ThemeMod .jsmartdrag-source em', function(e){
+            e.stopPropagation();
+            var that = $(this).parent().parent().parent();
+            var $this = $(this).parent().parent();
+            var modname = $this.data('modname');
+            $this.remove();
+            var data = that.find("li").map(function() {
+                var v = $(this).data('modname');
+                if (v == modname ) {
+                    v = false
+                }
+                return v
+            }).get();
+            var v = that.data('input');
+            $("input[name='" + v +"']").val(data.join(","))
+        })
+
 
     })
 

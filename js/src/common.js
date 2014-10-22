@@ -78,6 +78,41 @@ define(function(require, exports, module) {
         return string;
     });
 
+    //获取模块
+    template.helper('getmods', function(types,value) {
+        var string = '';
+        switch (types) {
+            case "data":
+                var mods  = value.data.split(","),
+                    info = {};
+                if ( value.info != undefined) {
+                    for (var j=0;j<value.info.length;j++) {
+                        info["a"+ value.info[j].id]=value.info[j].title;
+                    }
+                }
+                for (var i=0;i<mods.length;i++) {
+                    var name = mods[i];
+                    if (name.indexOf("diy")>-1){
+                        var  arr = name.split("_");
+                        string  += '<li  class="jsmartdrag-source" data-modname="diy_'+ arr[1] +'" ><div><i class="iconfont">&#xe60c;</i><p>'+ info['a'+arr[1]] +'</p><em>×</em></div></li>'
+
+                    } else {
+                        var arr = eval('__Mods.' + name),
+                            title = arr.name,
+                            icon = arr.icon;
+                        string  += '<li  class="jsmartdrag-source" data-modname="'+ name +'" ><div><i class="iconfont">'+ icon +'</i><p>'+ title +'</p><em>×</em></div></li>'
+                    }
+                }
+                break;
+            case "obj":
+                for (var i=0; i<value.length; i++) {
+                    string  += '<li  class="jsmartdrag-source" data-modname="diy_'+ value[i].id +'" ><div><i class="iconfont">&#xe60c;</i><p>'+ value[i].title +'</p><em>×</em></div></li>'
+                }
+                break;
+        }
+        return string
+    });
+
     var Common = {
         /*
          * 提示信息
