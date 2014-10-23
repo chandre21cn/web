@@ -1,7 +1,7 @@
 /**
  * Created by Chandre on 14-9-26.
  */
-define(function(require, exports, module) {
+define(function(require) {
     var $ = require('$');
     var Common = require('./common');			//通用模块
     var selectbox = require('selectbox');			//网页对话框组件
@@ -11,7 +11,6 @@ define(function(require, exports, module) {
     require('livequery');
     require('history');
     require('cityselect');
-    require('drag');
 
     /*
      *	取得URL地址后的参数
@@ -182,7 +181,10 @@ define(function(require, exports, module) {
                     var n = Number(json.code);
                     switch(n){
                         case 1: 			//无刷新
-                            return Common.alertTips({'msg' : json.msg})
+                            Common.alertTips({'msg' : json.msg});
+                            if (json.url!='') {
+                                window.location.replace(json.url)
+                            }
                             break;
                         case 2: 			//后退
                             history.go(-1);
@@ -700,23 +702,23 @@ define(function(require, exports, module) {
         //模板创建
 
         $("#theme-mod-list").livequery(function(){
-            $("li",this).jsmartdrag({
-                target:'.ThemeMod',
-                afterDrag:afterDrag
-            });
-
-            $("#theme-mod1").dragsort({
-                dragSelector: "div",
-                dragBetween: true,
-                dragEnd: saveOrder1,
-                placeHolderTemplate: "<li class='placeHolder'><div></div></li>"
-            });
-
-            $("#theme-mod2").dragsort({
-                dragSelector: "div",
-                dragBetween: true,
-                dragEnd: saveOrder2,
-                placeHolderTemplate: "<li class='placeHolder'><div></div></li>"
+            require.async(['drag'],function(){
+                $("#theme-mod-list li").jsmartdrag({
+                    target:'.ThemeMod',
+                    afterDrag:afterDrag
+                });
+                $("#theme-mod1").dragsort({
+                    dragSelector: "div",
+                    dragBetween: true,
+                    dragEnd: saveOrder1,
+                    placeHolderTemplate: "<li class='placeHolder'><div></div></li>"
+                });
+                $("#theme-mod2").dragsort({
+                    dragSelector: "div",
+                    dragBetween: true,
+                    dragEnd: saveOrder2,
+                    placeHolderTemplate: "<li class='placeHolder'><div></div></li>"
+                });
             });
         });
 

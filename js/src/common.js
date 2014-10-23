@@ -113,6 +113,20 @@ define(function(require, exports, module) {
         return string
     });
 
+    //json to string
+    template.helper('JsonToString', function(types,value) {
+        var string = '';
+        switch (types) {
+            case "string":
+                string = JSON.stringify(value);
+                break;
+            case "json":
+                string = JSON.parse(value);
+                break;
+        }
+        return string
+    });
+
     var Common = {
         /*
          * 提示信息
